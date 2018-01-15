@@ -1,7 +1,17 @@
+Ajout d'un client jms sur le serveur
+
+  For Linux:   WILDFLY_HOME/bin/add-user.sh -a -u 'quickstartUser' -p 'quickstartPwd1!' -g 'guest'
+  For Windows: WILDFLY_HOME\bin\add-user.bat  -a -u 'quickstartUser' -p 'quickstartPwd1!' -g 'guest'
+  
+Configuration du serveur wildfly
+
+ For Linux: WILDFLY_HOME/bin/jboss-cli.sh --connect --file=configure-jms.cli 
+ For Windows: WILDFLY_HOME\bin\jboss-cli.bat --connect --file=configure-jms.cli 
+  
 LOrs du lancement de wildfly
 
-./standalone.sh -c standalone-full.xml -b [adresse PC serveur]
+  ./standalone.sh -c standalone-full.xml -b [adresse PC serveur]
 
 compilation en Jar du producer
 
-mvn clean install compile assembly:single
+  mvn clean install compile assembly:single
