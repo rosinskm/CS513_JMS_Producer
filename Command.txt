@@ -1,0 +1,7 @@
+LOrs du lancement de wildfly
+
+./standalone.sh -c standalone-full.xml -b [adresse PC serveur]
+
+compilation en Jar du producer
+
+mvn clean install compile assembly:single
