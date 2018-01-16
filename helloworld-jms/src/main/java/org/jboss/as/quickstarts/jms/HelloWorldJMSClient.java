@@ -27,20 +27,20 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-public class HelloWorldJMSClient {
-    private static final Logger log = Logger.getLogger(HelloWorldJMSClient.class.getName());
+public class HelloWorldJMSClient2 {
+    private static final Logger log = Logger.getLogger(HelloWorldJMSClient2.class.getName());
 
     // Set up all the default values
-    private static final String DEFAULT_MESSAGE = "CAPT8 20180113 111730 2200";
+    private static final String DEFAULT_MESSAGE = "1000 L Ohm 1000 1 20180113 111730";
     private static final String DEFAULT_CONNECTION_FACTORY = "jms/RemoteConnectionFactory";
     private static final String DEFAULT_DESTINATION = "jms/queue/test";
     private static final String DEFAULT_MESSAGE_COUNT = "1";
     private static final String DEFAULT_USERNAME = "quickstartUser";
     private static final String DEFAULT_PASSWORD = "quickstartPwd1!";
     private static final String INITIAL_CONTEXT_FACTORY = "org.jboss.naming.remote.client.InitialContextFactory";
-    private static final String PROVIDER_URL = "http-remoting://172.20.11.31:8080";
+    private static final String PROVIDER_URL = "http-remoting://192.168.1.1:8080";
     //private static final String PROVIDER_URL = "http-remoting://127.0.0.1:8080";
-
+    
     public static void main(String[] args) throws InterruptedException {
 
         Context namingContext = null;
@@ -70,24 +70,15 @@ public class HelloWorldJMSClient {
 
             int count = Integer.parseInt(System.getProperty("message.count", DEFAULT_MESSAGE_COUNT));
             String content = System.getProperty("message.content", DEFAULT_MESSAGE);
-            
             try (JMSContext context = connectionFactory.createContext(userName, password)) {
-            	while(true){
 	            	log.info("Sending " + count + " messages with content: " + content);
 	                // Send the specified number of messages
-	                for (int i = 0; i < count; i++) {
-							context.createProducer().send(destination, content);
-							Thread.sleep(1000);					
+	                
+	            	for (int i = 0; i < count; i++) {
+							context.createProducer().send(destination, content);					
 	                }
             	}
-                // Create the JMS consumer
-               // JMSConsumer consumer = context.createConsumer(destination);
-                // Then receive the same number of messages that were sent
-               /* for (int i = 0; i < count; i++) {
-                    String text = consumer.receiveBody(String.class, 5000);
-                    log.info("Received message with content " + text);
-                }*/
-            }
+            
         } catch (NamingException e) {
             log.severe(e.getMessage());
         } finally {
