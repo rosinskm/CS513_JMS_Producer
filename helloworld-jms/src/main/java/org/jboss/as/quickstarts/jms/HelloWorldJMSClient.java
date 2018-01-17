@@ -27,20 +27,20 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-public class HelloWorldJMSClient2 {
-    private static final Logger log = Logger.getLogger(HelloWorldJMSClient2.class.getName());
+public class HelloWorldJMSClient {
+    private static final Logger log = Logger.getLogger(HelloWorldJMSClient.class.getName());
 
     // Set up all the default values
-    private static final String DEFAULT_MESSAGE = "1000 L Ohm 1000 1 20180113 111730";
+    private static final String DEFAULT_MESSAGE = "1200 A Ohm 1000 2200 20180113 111730";
     private static final String DEFAULT_CONNECTION_FACTORY = "jms/RemoteConnectionFactory";
     private static final String DEFAULT_DESTINATION = "jms/queue/test";
     private static final String DEFAULT_MESSAGE_COUNT = "1";
     private static final String DEFAULT_USERNAME = "quickstartUser";
     private static final String DEFAULT_PASSWORD = "quickstartPwd1!";
     private static final String INITIAL_CONTEXT_FACTORY = "org.jboss.naming.remote.client.InitialContextFactory";
-    private static final String PROVIDER_URL = "http-remoting://192.168.1.1:8080";
-    //private static final String PROVIDER_URL = "http-remoting://127.0.0.1:8080";
-    
+    //private static final String PROVIDER_URL = "http-remoting://192.168.1.1:8080";
+    private static final String PROVIDER_URL = "http-remoting://127.0.0.1:8080";
+
     public static void main(String[] args) throws InterruptedException {
 
         Context namingContext = null;
@@ -70,15 +70,46 @@ public class HelloWorldJMSClient2 {
 
             int count = Integer.parseInt(System.getProperty("message.count", DEFAULT_MESSAGE_COUNT));
             String content = System.getProperty("message.content", DEFAULT_MESSAGE);
+            String msgAddA = "1200 A Ohm 1000 2200 20180113 ";
+            //String msgAddL = "1000 L null 1000 1 20180113 ";
+            String msgAddL = "1000 L null 1000 ";
+            String msgDate =  " 20180113 ";
+            String tampon;
+            Integer heure = 111730;
             try (JMSContext context = connectionFactory.createContext(userName, password)) {
+            	
+            	/**
+            	 *             	Envoie de 20 messages contenant des mesures logiques  et 20 messages contenant des mesures analogiques
+            	 */
+            	
+            	for (int u = 0; u < 20; u++){
+            		
+            		tampon = msgAddA + String.valueOf(heure + u);
+            		content = System.getProperty("message.content", tampon);
 	            	log.info("Sending " + count + " messages with content: " + content);
+	            	
 	                // Send the specified number of messages
 	                
 	            	for (int i = 0; i < count; i++) {
-							context.createProducer().send(destination, content);					
+							context.createProducer().send(destination, content);
 	                }
+	            	Thread.sleep(100);
+	            	if(u%2 == 0) {
+	            		tampon = msgAddL + 1 + msgDate + String.valueOf(heure + u);
+	            	}else {
+	            		tampon = msgAddL + 0 + msgDate + String.valueOf(heure + u);
+	            	}
+            		content = System.getProperty("message.content", tampon);
+            		
+            		log.info("Sending " + count + " messages with content: " + content);
+	                // Send the specified number of messages
+	                
+	            	for (int i = 0; i < count; i++) {
+							context.createProducer().send(destination, content);
+	                }
+	            	Thread.sleep(10);
             	}
-            
+            }
         } catch (NamingException e) {
             log.severe(e.getMessage());
         } finally {
